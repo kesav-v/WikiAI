@@ -11,9 +11,14 @@ public class WikiCategories extends Thread {
 	private ArrayList<String> commons = new ArrayList<String>();
 	private ArrayList<WikiArticle> articles = readArticles();
 	private int numThreads;
-	private int numArticles;
+	private static int numArticles;
+	private int number;
+	private long start;
+	double seconds;
 
-	public WikiCategories(int n) {
+	public WikiCategories(long start, int number, int n) {
+		this.start = start;
+		this.number = number;
 		numThreads = n;
 		numArticles = 100;
 	}
@@ -28,19 +33,27 @@ public class WikiCategories extends Thread {
 			numThreads = kb.nextInt();
 		}
 		WikiCategories[] wcs = new WikiCategories[numThreads];
+		long l = System.nanoTime();
 		for (int i = 0; i < wcs.length; i++) {
-			wcs[i] = new WikiCategories(numThreads);
+			wcs[i] = new WikiCategories(l, i + 1, numThreads);
 			wcs[i].start();
 		}
 	}
 
 	public void run() {
-		long l = System.nanoTime();
+		try {
+			go();
+		}
+		finally {
+			seconds = (System.nanoTime() - start) / 1E9;
+			System.out.println("Thread " + number + " finished in " + seconds + " seconds");
+		}
+	}
+
+	public void go() {
 		for (int i = 0; i < numArticles / numThreads; i++) {
 			categorize();
 		}
-		double seconds = (System.nanoTime() - l) / 1E9;
-		System.out.println("On " + numThreads + " threads, the program ran at " + (numArticles / seconds) + " articles per second.");
 	}
 
 	public void categorize() {

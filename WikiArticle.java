@@ -16,7 +16,11 @@ public class WikiArticle {
 		}
 		title = doc.getDivTextById("firstHeading");
 		content = doc.getDivTextById("mw-content-text");
-		description = doc.getDoc().select("#mw-content-text p").get(0).text();
+		try {
+			description = doc.getDoc().select("#mw-content-text p").get(0).text();
+		} catch (Exception e) {
+			
+		}
 	}
 
 	public WikiArticle(String search) {
@@ -44,6 +48,10 @@ public class WikiArticle {
 		this.title = title;
 		this.description = description;
 		this.content = content;
+	}
+
+	public boolean exists() {
+		return content != null;
 	}
 
 	public String toString() {

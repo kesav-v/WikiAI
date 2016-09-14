@@ -16,7 +16,8 @@ public class HTMLDoc {
 		try {
 			doc = Jsoup.connect(url).get();
 		} catch (Exception e) {
-			System.err.println("ERROR: Invalid URL " + url);
+			System.out.println(e);
+			// System.err.println("ERROR: Invalid URL " + url);
 			valid = false;
 		}
 	}
